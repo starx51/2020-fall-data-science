@@ -15,31 +15,81 @@ For this section of the exercise we will be using the `bigquery-public-data.aust
 
 5. Write a query that tells us how many rows are in the table. 
 	```
-	[YOUR QUERY HERE]
+	[
+    SELECT *
+FROM bigquery-public-data.austin_311.311_service_requests 
+
+  ```  or just display the total count ```
+    
+SELECT  COUNT(*)  
+
+FROM bigquery-public-data.austin_311.311_service_requests 
+]
 	```
 
 7. Write a query that tells us how many _distinct_ values there are in the complaint_description column.
 	``` 
-	[YOUR QUERY HERE]
+	[
+    SELECT distinct complaint_description
+    
+FROM bigquery-public-data.austin_311.311_service_requests 
+
+```or we can also order the result alphabetically```
+
+SELECT distinct complaint_description
+
+FROM bigquery-public-data.austin_311.311_service_requests 
+
+order by complaint_description;
+]
 	```
   
 8. Write a query that counts how many times each owning_department appears in the table and orders them from highest to lowest. 
 	``` 
-	[YOUR QUERY HERE]
+	[
+SELECT owning_department, count(*)  as Highest_to_lowest
+
+FROM bigquery-public-data.austin_311.311_service_requests 
+
+group by owning_department
+
+order by count(*) desc
+]
 	```
 
 9. Write a query that lists the top 5 complaint_description that appear most and the amount of times they appear in this table. (hint... limit)
 	```
-	[YOUR QUERY HERE]
+	[
+SELECT complaint_description, count(*)  as Highest_to_lowest
+
+FROM bigquery-public-data.austin_311.311_service_requests 
+
+group by complaint_description
+
+order by count(*) desc
+limit 5
 	  ```
 10. Write a query that lists and counts all the complaint_description, just for the where the owning_department is 'Animal Services Office'.
 	```
-	[YOUR QUERY HERE]
+	[SELECT complaint_description, count(*)  as Animals_complaints
+
+FROM bigquery-public-data.austin_311.311_service_requests 
+
+where owning_department = "Animal Services Office"
+
+group by   complaint_description
+order by count(*) desc]
 	```
 
 11. Write a query to check if there are any duplicate values in the unique_key column (hint.. There are two was to do this, one is to use a temporary table for the groupby, then filter for values that have more than one count, or, using just one table but including the  `having` function). 
 	```
-	[YOUR QUERY HERE]
+	[SELECT unique_key, count(*)  as Duplicates
+
+FROM bigquery-public-data.austin_311.311_service_requests 
+
+group by unique_key
+HAVING COUNT(*) > 1
+]
 	```
 
 
@@ -47,31 +97,62 @@ For this section of the exercise we will be using the `bigquery-public-data.aust
 
 1. Write a query that returns each zipcode and their population for 2000 and 2010. 
 	```
-	[YOUR QUERY HERE]
+	[
+
+select  zipcode, population 
+from `bigquery-public-data.census_bureau_usa.population_by_zip_2000` as Zip_pop_2000
+UNION ALL
+select zipcode, population
+from `bigquery-public-data.census_bureau_usa.population_by_zip_2010`  as Zip_pop_2010
+
+]
 	```
 
 ### For the next section, use the  `bigquery-public-data.google_political_ads.advertiser_weekly_spend` table.
 1. Using the `advertiser_weekly_spend` table, write a query that finds the advertiser_name that spent the most in usd. 
 	```
-	[YOUR QUERY HERE]
+	[select advertiser_name, sum(spend_usd) as usd
+from `bigquery-public-data.google_political_ads.advertiser_weekly_spend`  
+group by advertiser_name
+order by sum(spend_usd) desc]
 	```
 2. Who was the 6th highest spender? (No need to insert query here, just type in the answer.)
 	```
-	[YOUR ANSWER HERE]
+	[
+    TOM STEYER 2020-------> 8801900 usd
+]
 	```
 
-3. What week_start_date had the highest spend? (No need to insert query here, just type in the answer.)
+3. What week_start_date had the highest spend? (```2020-09-20------->26595500 usd```)
 	```
-	[YOUR ANSWER HERE]
+	[
+select week_start_date, sum(spend_usd) as usd
+from `bigquery-public-data.google_political_ads.advertiser_weekly_spend`  
+group by week_start_date
+order by sum(spend_usd) desc
+]
 	```
 
 4. Using the `advertiser_weekly_spend` table, write a query that returns the sum of spend by week (using week_start_date) in usd for the month of August only. 
 	```
-	[YOUR QUERY HERE]
+	[
+select week_start_date, sum(spend_usd) as usd
+
+from `bigquery-public-data.google_political_ads.advertiser_weekly_spend`  
+where week_start_date BETWEEN '2020-08-01' AND '2020-08-31'
+group by week_start_date
+order by sum(spend_usd) desc
+]
 	```
 6.  How many ads did the 'TOM STEYER 2020' campaign run? (No need to insert query here, just type in the answer.)
 	```
-	[YOUR ANSWER HERE]
+	[50]
+    
+    select advertiser_name, count(*) as counts
+from `bigquery-public-data.google_political_ads.advertiser_weekly_spend`  
+where advertiser_name = 'TOM STEYER 2020'
+group by advertiser_name
+order by count(*) desc
 	```
 7. Write a query that has, in the US region only, the total spend in usd for each advertiser_name and how many ads they ran. (Hint, you're going to have to join tables for this one). 
 	```
@@ -79,11 +160,18 @@ For this section of the exercise we will be using the `bigquery-public-data.aust
 	```
 8. For each advertiser_name, find the average spend per ad. 
 	```
-	[YOUR QUERY HERE]
+	[ 
+select advertiser_name, avg(spend_usd) as Average_spent
+from `bigquery-public-data.google_political_ads.advertiser_weekly_spend`  
+group by advertiser_name
+order by avg(spend_usd) desc]
 	```
 10. Which advertiser_name had the lowest average spend per ad that was at least above 0. 
 	``` 
-	[YOUR QUERY HERE]
+	[select advertiser_name, min(spend_usd) 
+from `bigquery-public-data.google_political_ads.advertiser_weekly_spend`  
+group by advertiser_name
+order by min(spend_usd) desc]
 	```
 ## For this next section, use the `new_york_citibike` datasets.
 
