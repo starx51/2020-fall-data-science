@@ -177,16 +177,39 @@ order by min(spend_usd) desc]
 
 1. Who went on more bike trips, Males or Females?
 	```
-	[YOUR QUERY HERE]
+	[Select gender, count(*) as n_gender
+from `bigquery-public-data.new_york_citibike.citibike_trips` 
+group by gender;
+
+]
 	```
 2. What was the average, shortest, and longest bike trip taken in minutes?
 	```
-	[YOUR QUERY HERE]
+	[select count(*) as count, 
+round(avg(tripduration),2) as Avg , 
+min(tripduration) as min,
+max(tripduration) as max
+from `bigquery-public-data.new_york_citibike.citibike_trips` 
+]
 	```
 
 3. Write a query that, for every station_name, has the amount of trips that started there and the amount of trips that ended there. (Hint, use two temporary tables, one that counts the amount of starts, the other that counts the number of ends, and then join the two.) 
 	```
-	[YOUR QUERY HERE]
+	with TABLE_S as(
+select start_station_name,
+count(*) as start_sation
+from `bigquery-public-data.new_york_citibike.citibike_trips`
+group by start_statio_name
+TaBLE_E as ( select end_station_name,
+count(*) as end_station_name, 
+from `bigquery-public-data.new_york_citibike.citibike_trips` 
+group by end_station_name
+)
+select A.start_station_name, A.start_station, B.end_station_name from TABLE_S as A join TABLE_E as B on A.start_station_name = B.end_station_name
+
+
+
+]
 	```
 # The next section is the Google Colab section.  
 1. Open up this [this Colab notebook](https://colab.research.google.com/drive/1kHdTtuHTPEaMH32GotVum41YVdeyzQ74?usp=sharing).
